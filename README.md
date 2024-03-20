@@ -1,1 +1,29 @@
 # flutter_zustand
+
+An attempt to bring [Zustand](https://github.com/pmndrs/zustand) to Flutter.
+
+After working with Flutter for 5 years, I've found that state management in flutter is
+- Laborious
+- Not productive
+- Boilerplate heavy
+- Often slows down the analyzer as code is generated
+- Feels sluggish to type
+
+I found myself saying things like:
+- "Oh great, I have to place this in the build context somewhere"
+- "Ah darn, I have to run the generator again"
+
+I had the pleasure to work with Zustand on my last project. I was amazed by how quickly I was
+able to build features and how easy it was to maintain the code. I want to bring that same
+experience to Flutter.
+
+Zustand has the advantage of being written in javascript, which supports reflection. We'll see
+if this is possible.
+
+This package aims to provide the following:
+- Fast to type
+- No boilerplate
+- No advantage to using code generation
+- No need to place in the build context, but still can support multiple instances
+- Productive and easy maintenance
+- Handle small and large scale apps gracefully
