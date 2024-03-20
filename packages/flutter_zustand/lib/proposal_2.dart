@@ -2,6 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+class ZustandScope extends StatelessWidget {
+  const ZustandScope({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+}
+
 abstract class Store<S> {
   Store(S state) : _state = state {
     init();
@@ -49,23 +63,32 @@ class MyStore extends Store<MyState> {
 
 MyStore useMyStore() => create(() => MyStore());
 
-Widget build(BuildContext context) {
-  final a = useMyStore().select(context, (state) => state.a);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  useMyStore().listen(
-    context,
-    (state) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('a changed to ${state.a}')),
-      );
-    },
-    condition: (prev, next) => prev.a == 5 && next.a == 0,
-  );
+  @override
+  Widget build(BuildContext context) {
+    final a = useMyStore().select(context, (state) => state.a);
 
-  return ElevatedButton(
-    child: Text('A=$a'),
-    onPressed: () {
-      useMyStore().incrementA();
-    },
-  );
+    useMyStore().listen(
+      context,
+      (state) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('a changed to ${state.a}')),
+        );
+      },
+      condition: (prev, next) => prev.a == 5 && next.a == 0,
+    );
+
+    return ElevatedButton(
+      child: Text('A=$a'),
+      onPressed: () {
+        useMyStore().incrementA();
+      },
+    );
+  }
+}
+
+void main(List<String> args) {
+  runApp(const ZustandScope(child: MyApp()));
 }
