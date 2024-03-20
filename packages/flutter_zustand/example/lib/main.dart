@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zustand/proposal_3.dart';
+import 'package:flutter_zustand/flutter_zustand.dart';
 
 void main() {
-  runApp(const ZustandScope(child: ExampleApp()));
+  runApp(const ZustandScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,12 +38,13 @@ class MyHomePage extends StatelessWidget {
     useMyStore().listen(
       context,
       (state) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('a changed to ${state.counter}')),
-        );
+        if (state.counter == 5) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('a changed to ${state.counter}')),
+          );
+        }
       },
-      condition: (prev, next) =>
-          prev.counter != next.counter && next.counter % 5 == 0,
+      dependencies: (state) => [state.counter],
     );
 
     return Scaffold(
