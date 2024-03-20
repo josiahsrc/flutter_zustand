@@ -27,3 +27,74 @@ This package aims to provide the following:
 - No need to place in the build context, but still can support multiple instances
 - Productive and easy maintenance
 - Handle small and large scale apps gracefully
+
+The ideal API is something like...
+
+```dart
+// Store definition
+class MyStore extends Store {
+  int a = 0;
+  int b = 0;
+
+  int get c => a + b;
+
+  void incrementA() {
+    set(() => a++);
+  }
+
+  void incrementB() {
+    set(() => b++);
+  }
+
+  Future<void> longTask() async {
+    set(() {
+      a = 10;
+    });
+    await Future.delayed(Duration(seconds: 1));
+    set(() {
+      a = -1;
+    });
+  }
+
+  @override
+  FutureOr<void> init() {
+    super.init();
+  }
+
+  @override
+  FutureOr<void> close() {
+    super.close();
+  }
+}
+
+// registering the stores
+void main() {
+  registerStore(MyStore());
+  // or...
+  // registerLazyStore(() => MyStore());
+}
+
+// using the store in a widget
+Widget build(BuildContext context) {
+  final a = use<MyStore>().select(context, (state) => state.a);
+  final b = use<MyStore>().select(context, (state) => state.b);
+  final c = use<MyStore>().select(context, (state) => state.c);
+  final d = use<MyStore>().select(context, (state) => state.a + state.b, equality: (prev, next) => prev == next);
+
+  // I have no idea if this is possible
+  // it looks like it is: add listener, if context is unmounted destroy listener
+  use<MyStore>().event(
+    context,
+    (state) {
+      showSnackBar('A is now ${state.a}');
+    },
+    condition: (prev, next) => prev.a == 5 && next.a == 0,
+  );
+
+  return Button(
+    onPressed: () {
+      use<MyStore>().incrementA();
+    },
+  );
+}
+```
