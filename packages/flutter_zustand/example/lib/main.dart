@@ -20,6 +20,7 @@ class MyStore extends Store {
   bool loading = false;
   int counter = 0;
   int lastCounter = 0;
+  int thisVariableIsNotObserved = 0;
 
   bool get counterChanged => lastCounter != counter;
 
@@ -27,6 +28,12 @@ class MyStore extends Store {
     set(() {
       lastCounter = counter;
       counter++;
+    });
+  }
+
+  void changeNonObservedVariable() {
+    set(() {
+      thisVariableIsNotObserved++;
     });
   }
 
@@ -53,11 +60,15 @@ class MyStore extends Store {
 
 MyStore useMyStore() => create(() => MyStore());
 
+int rebuilds = 0;
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    rebuilds++;
+
     final counter = useMyStore().select(context, (store) => store.counter);
     final isLoading = useMyStore().select(context, (store) => store.loading);
 
@@ -78,18 +89,34 @@ class MyHomePage extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 20),
+            Text("UI has rebuilt this many time: $rebuilds"),
+            const SizedBox(height: 20),
             if (isLoading) const CircularProgressIndicator(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          useMyStore().incrementA();
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              useMyStore().changeNonObservedVariable();
+            },
+            child: const Icon(Icons.question_answer),
+          ),
+          const SizedBox(width: 10),
+          FloatingActionButton(
+            onPressed: () {
+              useMyStore().incrementA();
+            },
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
 
+    // Maybe there's a better api here?
     return StoreListener<MyStore>(
       child: page,
       onInit: (context, store) {

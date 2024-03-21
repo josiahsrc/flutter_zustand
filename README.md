@@ -11,7 +11,7 @@ After working with Flutter for 5 years, I've found that state management in flut
 - Often slows down the analyzer as code is generated
 - Feels sluggish to type
 
-I found myself saying things like:
+I found myself saying things like this, over and over and over again:
 - "Oh great, I have to place this in the build context somewhere"
 - "Ah darn, I have to run the generator again"
 
@@ -26,7 +26,7 @@ This package aims to provide the following:
 - Fast to type
 - No boilerplate
 - No advantage to using code generation
-- No need to place in the build context, but still can support multiple instances
+- No need to place in the build context, but still can support multiple instances (edge case)
 - Productive and easy maintenance
 - Handle small and large scale apps gracefully
 

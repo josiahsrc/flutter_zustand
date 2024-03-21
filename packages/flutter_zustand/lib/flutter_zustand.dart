@@ -41,6 +41,10 @@ S create<S extends Store>(StoreFactory<S> create) {
   return _Locator().get<S>();
 }
 
+// Zustand enforces state immutability. Its set fucntion merges the new values
+// and emits a new state.
+//
+// It's starting to seem that the main advantage here is global stores.
 abstract class Store {
   Store();
 
