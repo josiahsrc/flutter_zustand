@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zustand/flutter_zustand.dart';
 
 void main() {
-  runApp(const ZustandScope(child: MyApp()));
+  runApp(const StoreScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,11 +17,36 @@ class MyApp extends StatelessWidget {
 }
 
 class MyStore extends Store {
+  bool loading = false;
   int counter = 0;
+  int lastCounter = 0;
+
+  bool get counterChanged => lastCounter != counter;
 
   void incrementA() {
     set(() {
+      lastCounter = counter;
       counter++;
+    });
+  }
+
+  Future<void> longInit() async {
+    set(() {
+      loading = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    set(() {
+      loading = false;
+    });
+  }
+
+  Future<void> longDispose() async {
+    set(() {
+      loading = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    set(() {
+      loading = false;
     });
   }
 }
@@ -34,20 +59,9 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counter = useMyStore().select(context, (store) => store.counter);
+    final isLoading = useMyStore().select(context, (store) => store.loading);
 
-    useMyStore().listen(
-      context,
-      (state) {
-        if (state.counter == 5) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('a changed to ${state.counter}')),
-          );
-        }
-      },
-      dependencies: (state) => [state.counter],
-    );
-
-    return Scaffold(
+    final page = Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Zustand Example"),
@@ -63,6 +77,8 @@ class MyHomePage extends StatelessWidget {
               '$counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 20),
+            if (isLoading) const CircularProgressIndicator(),
           ],
         ),
       ),
@@ -72,6 +88,25 @@ class MyHomePage extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+    );
+
+    return StoreListener<MyStore>(
+      child: page,
+      onInit: (context, store) {
+        store.longInit();
+      },
+      onChange: (context, store) {
+        if (store.counterChanged && store.counter % 5 == 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('You have reached ${store.counter}'),
+            ),
+          );
+        }
+      },
+      onDispose: (context, store) {
+        store.longDispose();
+      },
     );
   }
 }

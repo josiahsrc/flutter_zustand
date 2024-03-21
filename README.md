@@ -1,6 +1,8 @@
 # flutter_zustand
 
-An attempt to bring [Zustand](https://github.com/pmndrs/zustand) to Flutter.
+Non-ceremonial. The bear-necessities for state management.
+
+An attempt to bring [Zustand](https://github.com/pmndrs/zustand) to Flutter. This is a work in progress and is not ready for use.
 
 After working with Flutter for 5 years, I've found that state management in flutter is
 - Laborious
@@ -91,7 +93,7 @@ Widget build(BuildContext context) {
     condition: (prev, next) => prev.a == 5 && next.a == 0,
   );
 
-  return Button(
+  final view = Button(
     onPressed: () {
       use<MyStore>().incrementA();
     },
