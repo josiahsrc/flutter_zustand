@@ -4,58 +4,61 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-typedef StoreFactory<S extends Store<V>, V> = S Function();
-
-typedef StateSelector<S extends Store<V>, V, T> = T Function(V state);
-
 class StoreLocator {
   StoreLocator._();
   factory StoreLocator() => _instance ??= StoreLocator._();
   static StoreLocator? _instance;
 
-  final _factories = <Type, dynamic Function()>{};
-  final _instances = <Type, dynamic>{};
-  final _subscriptions = <Type, StreamSubscription>{};
-  final _controller = StreamController<Type>.broadcast();
+  final _factories = <dynamic, dynamic Function()>{};
+  final _instances = <dynamic, dynamic>{};
+  final _subscriptions = <dynamic, StreamSubscription>{};
+  final _controller = StreamController<dynamic>.broadcast();
 
-  Stream<Type> get changes => _controller.stream;
+  Stream<dynamic> get changes => _controller.stream;
 
-  void register<S extends Store<V>, V>(StoreFactory<S, V> factory) {
-    _factories[S] = factory;
+  void register<V>(
+    dynamic key,
+    Store<V> Function() factory,
+  ) {
+    _factories[key] = factory;
   }
 
-  S getStatic<S extends Store<V>, V>() {
-    return getRuntime(S) as S;
-  }
-
-  Store<V> getRuntime<V>(Type type) {
-    if (!_instances.containsKey(type)) {
-      final store = _factories[type]!() as Store<V>;
-      _instances[type] = store;
-      _subscriptions[type] = store.stream.listen((_) => _onChange(type));
+  Store<V> get<V>(dynamic key) {
+    if (!_instances.containsKey(key)) {
+      final store = _factories[key]!() as Store<V>;
+      store._key = key;
+      _instances[key] = store;
+      _subscriptions[key] = store.stream.listen((_) => _onChange(key));
     }
-    return _instances[type] as Store<V>;
+    return _instances[key] as Store<V>;
   }
 
-  void _onChange(Type type) {
-    _controller.add(type);
+  void _onChange(dynamic key) {
+    _controller.add(key);
   }
 }
 
-S create<S extends Store<V>, V>(StoreFactory<S, V> create) {
-  StoreLocator().register(create);
-  return StoreLocator().getStatic<S, V>();
+S create<S extends Store<V>, V>(
+  S Function() create, {
+  dynamic tag,
+}) {
+  final key = tag != null ? '$S-$tag' : S;
+  StoreLocator().register(key, create);
+  return StoreLocator().get(key) as S;
 }
 
 abstract class Store<V> {
   Store(V state) : _state = state;
 
   final _subject = StreamController<V>.broadcast();
+  dynamic _key;
   V _state;
 
   Stream<V> get stream => _subject.stream;
 
   V get state => _state;
+
+  dynamic get key => _key;
 
   @protected
   void set(V value) {
@@ -64,14 +67,16 @@ abstract class Store<V> {
   }
 }
 
+typedef StateSelector<V, T> = T Function(V state);
+
 extension StoreSelectorX<V> on Store<V> {
   T select<T>(
     BuildContext context,
-    T Function(V) selector,
+    StateSelector<V, T> selector,
   ) {
     return context.select<StoreLocator, T>(
       (locator) {
-        final store = locator.getRuntime<V>(runtimeType);
+        final store = locator.get<V>(key);
         return selector(store.state);
       },
     );
@@ -83,8 +88,8 @@ extension StoreListenerX<V> on Store<V> {
     StoreListenerCallback<V> callback, {
     StoreListenerCondition<V>? condition,
   }) {
-    return RuntimeStoreListener<V>(
-      type: runtimeType,
+    return SingleStoreListener<V>(
+      store: this,
       callback: callback,
       condition: condition,
     );
@@ -122,32 +127,30 @@ typedef StoreListenerCallback<V> = void Function(BuildContext context, V state);
 
 typedef StoreListenerCondition<V> = bool Function(V previous, V current);
 
-class RuntimeStoreListener<V> extends SingleChildStatefulWidget {
-  const RuntimeStoreListener({
+class SingleStoreListener<V> extends SingleChildStatefulWidget {
+  const SingleStoreListener({
     super.key,
-    required this.type,
+    required this.store,
     required this.callback,
     this.condition,
   });
 
-  final Type type;
+  final Store<V> store;
   final StoreListenerCallback<V> callback;
   final StoreListenerCondition<V>? condition;
 
   @override
-  State<RuntimeStoreListener<V>> createState() => _StoreListenerState<V>();
+  State<SingleStoreListener<V>> createState() => _StoreListenerState<V>();
 }
 
-class _StoreListenerState<V> extends SingleChildState<RuntimeStoreListener<V>> {
+class _StoreListenerState<V> extends SingleChildState<SingleStoreListener<V>> {
   StreamSubscription? _sub;
   late V _prevState;
-
-  Store<V> get _store => StoreLocator().getRuntime<V>(widget.type);
 
   @override
   void initState() {
     super.initState();
-    _prevState = _store.state;
+    _prevState = widget.store.state;
     _subscribe();
   }
 
@@ -158,7 +161,7 @@ class _StoreListenerState<V> extends SingleChildState<RuntimeStoreListener<V>> {
   }
 
   void _subscribe() {
-    _sub = _store.stream.listen((state) {
+    _sub = widget.store.stream.listen((state) {
       if (widget.condition?.call(_prevState, state) ?? true) {
         widget.callback(context, state);
       }

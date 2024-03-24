@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zustand/flutter_zustand.dart';
 
@@ -140,7 +141,7 @@ class TodoListPage extends StatelessWidget {
             showMessage('Reordered items');
           },
           condition: (prev, next) =>
-              prev.ordering != next.ordering &&
+              !listEquals(prev.ordering, next.ordering) &&
               prev.ordering.length == next.ordering.length,
         ),
         useTodoStore().listen(
@@ -154,13 +155,6 @@ class TodoListPage extends StatelessWidget {
             showMessage('Removed item');
           },
           condition: (prev, next) => next.todos.length < prev.todos.length,
-        ),
-        useTodoStore().listen(
-          (context, state) {
-            showMessage('Toggled item');
-          },
-          condition: (prev, next) =>
-              next.isEverythingComplete && !prev.isEverythingComplete,
         ),
       ],
       child: page,
