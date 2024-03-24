@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "flutter_zustand_example",
+      "cwd": "packages/flutter_zustand/example",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}
