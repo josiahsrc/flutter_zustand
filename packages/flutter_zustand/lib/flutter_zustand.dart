@@ -26,7 +26,6 @@ class StoreLocator {
   Store<V> get<V>(dynamic key) {
     if (!_instances.containsKey(key)) {
       final store = _factories[key]!() as Store<V>;
-      store._key = key;
       _instances[key] = store;
       _subscriptions[key] = store.stream.listen((_) => _onChange(key));
     }
@@ -38,27 +37,20 @@ class StoreLocator {
   }
 }
 
-S create<S extends Store<V>, V>(
-  S Function() create, {
-  dynamic tag,
-}) {
-  final key = tag != null ? '$S-$tag' : S;
-  StoreLocator().register(key, create);
-  return StoreLocator().get(key) as S;
+S create<S extends Store<V>, V>(S Function() create) {
+  StoreLocator().register(S, create);
+  return StoreLocator().get(S) as S;
 }
 
 abstract class Store<V> {
   Store(V state) : _state = state;
 
   final _subject = StreamController<V>.broadcast();
-  dynamic _key;
   V _state;
 
   Stream<V> get stream => _subject.stream;
 
   V get state => _state;
-
-  dynamic get key => _key;
 
   @protected
   void set(V value) {
@@ -75,10 +67,7 @@ extension StoreSelectorX<V> on Store<V> {
     StateSelector<V, T> selector,
   ) {
     return context.select<StoreLocator, T>(
-      (locator) {
-        final store = locator.get<V>(key);
-        return selector(store.state);
-      },
+      (_) => selector(state),
     );
   }
 }

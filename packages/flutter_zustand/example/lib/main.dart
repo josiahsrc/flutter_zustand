@@ -1,6 +1,5 @@
 import 'package:example/counter.dart';
 import 'package:example/todo_list.dart';
-import 'package:example/two_store_instances.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zustand/flutter_zustand.dart';
 
@@ -62,10 +61,6 @@ class MyHomePage extends StatelessWidget {
           DemoTile(
             title: const Text("Todo List"),
             builder: (context) => const TodoListPage(),
-          ),
-          DemoTile(
-            title: const Text("Two Store Instances"),
-            builder: (context) => const TwoStoreInstancesPage(),
           ),
         ],
       ),
