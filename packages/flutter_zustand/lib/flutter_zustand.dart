@@ -88,7 +88,7 @@ extension StoreListenerX<V> on Store<V> {
     StoreListenerCallback<V> callback, {
     StoreListenerCondition<V>? condition,
   }) {
-    return SingleStoreListener<V>(
+    return StoreReferenceListener<V>(
       store: this,
       callback: callback,
       condition: condition,
@@ -127,8 +127,8 @@ typedef StoreListenerCallback<V> = void Function(BuildContext context, V state);
 
 typedef StoreListenerCondition<V> = bool Function(V previous, V current);
 
-class SingleStoreListener<V> extends SingleChildStatefulWidget {
-  const SingleStoreListener({
+class StoreReferenceListener<V> extends SingleChildStatefulWidget {
+  const StoreReferenceListener({
     super.key,
     required this.store,
     required this.callback,
@@ -140,10 +140,12 @@ class SingleStoreListener<V> extends SingleChildStatefulWidget {
   final StoreListenerCondition<V>? condition;
 
   @override
-  State<SingleStoreListener<V>> createState() => _StoreListenerState<V>();
+  State<StoreReferenceListener<V>> createState() =>
+      _StoreReferenceListenerState<V>();
 }
 
-class _StoreListenerState<V> extends SingleChildState<SingleStoreListener<V>> {
+class _StoreReferenceListenerState<V>
+    extends SingleChildState<StoreReferenceListener<V>> {
   StreamSubscription? _sub;
   late V _prevState;
 
