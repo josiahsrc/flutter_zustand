@@ -7,13 +7,23 @@ abstract class Store<V> {
 
   final _subject = StreamController<V>.broadcast();
   V _state;
+  bool _disposed = false;
 
-  Stream<V> get stream => _subject.stream;
+  Stream<V> get stream {
+    return _subject.stream;
+  }
 
   V get state => _state;
 
+  bool get isDisposed => _disposed;
+
+  @visibleForTesting
   @protected
   void set(V value) {
+    if (isDisposed) {
+      throw StateError('Cannot set state on a disposed store');
+    }
+
     _state = value;
     _subject.add(value);
   }
@@ -21,5 +31,6 @@ abstract class Store<V> {
   @mustCallSuper
   Future<void> dispose() async {
     await _subject.close();
+    _disposed = true;
   }
 }

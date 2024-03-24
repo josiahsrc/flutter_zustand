@@ -28,30 +28,43 @@ class StoreLocator {
     _subscriptions[key] = store.stream.listen((_) => _onChange(key));
   }
 
+  bool contains(StoreKey key) =>
+      _factories.containsKey(key) || _instances.containsKey(key);
+
+  bool isCreated(StoreKey key) => _instances.containsKey(key);
+
   S get<S extends Store<V>, V>(StoreKey key) {
+    if (!contains(key)) {
+      throw StateError('Store $key not found');
+    }
+
     if (!_instances.containsKey(key)) {
       final store = _factories[key]!() as S;
       put(key, store);
     }
+
     return _instances[key] as S;
   }
 
-  Future<void> remove(StoreKey key) async {
-    if (!_instances.containsKey(key)) {
-      return;
+  Future<void> delete(StoreKey key) async {
+    if (isCreated(key)) {
+      await _subscriptions[key]!.cancel();
+      await (_instances[key] as Store).dispose();
+      _subscriptions.remove(key);
+      _instances.remove(key);
     }
 
-    await _subscriptions[key]!.cancel();
-    await (_instances[key] as Store).dispose();
-    _subscriptions.remove(key);
-    _instances.remove(key);
     _factories.remove(key);
+  }
+
+  Future<void> deleteAll() async {
+    final keys = _instances.keys.toList();
+    await Future.wait(keys.map(delete));
   }
 
   Future<void> dispose() async {
     await _controller.close();
-    final keys = _instances.keys.toList();
-    await Future.wait(keys.map(remove));
+    await deleteAll();
     _instance = null;
   }
 
