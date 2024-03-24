@@ -33,6 +33,9 @@ class TodoState {
   String getTodo(int id) => todos[id]!;
 
   bool get canAddNewItem => draft.isNotEmpty;
+
+  bool get isEverythingComplete =>
+      ordering.every(isDone) && ordering.isNotEmpty;
 }
 
 class TodoStore extends Store<TodoState> {
@@ -95,7 +98,15 @@ class TodoListPage extends StatelessWidget {
               useTodoStore().reorderedItems(oldIndex, newIndex);
             },
             children: ordering
-                .map((id) => TodoItem(id: id, key: ValueKey(id)))
+                .map(
+                  (id) => Dismissible(
+                    key: ValueKey(id),
+                    child: TodoItem(id: id),
+                    onDismissed: (_) {
+                      useTodoStore().removedItem(id);
+                    },
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -137,6 +148,19 @@ class TodoListPage extends StatelessWidget {
             showMessage('Added new item');
           },
           condition: (prev, next) => next.todos.length > prev.todos.length,
+        ),
+        useTodoStore().listen(
+          (context, state) {
+            showMessage('Removed item');
+          },
+          condition: (prev, next) => next.todos.length < prev.todos.length,
+        ),
+        useTodoStore().listen(
+          (context, state) {
+            showMessage('Toggled item');
+          },
+          condition: (prev, next) =>
+              next.isEverythingComplete && !prev.isEverythingComplete,
         ),
       ],
       child: page,
@@ -215,7 +239,9 @@ class _DraftEditorState extends State<DraftEditor> {
     return StoreListener(
       [
         useTodoStore().listen(
-          (context, state) {},
+          (context, state) {
+            controller.text = state.draft;
+          },
           condition: (prev, next) => prev.draft != next.draft,
         ),
       ],
