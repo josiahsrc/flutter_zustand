@@ -1,3 +1,8 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+- Initial version
+- Store listener
+- Store scope
+- Store
+- create method
+- Selectors

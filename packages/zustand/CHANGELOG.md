@@ -1,3 +1,7 @@
-## 1.0.0
+## 0.0.1
 
-- Initial version.
+- Initial version
+- Store
+- Store locator
+- Well tested
+- Create method

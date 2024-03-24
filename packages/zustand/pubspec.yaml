@@ -1,6 +1,6 @@
 name: zustand
 description: "A package that brings Zustand-like state management in your dart app."
-version: 1.0.0
+version: 0.0.1
 repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/zustand
 homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/zustand
 
