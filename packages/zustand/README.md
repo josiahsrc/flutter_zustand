@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/josiahsrc/flutter_zustand/blob/main/assets/bear_dart.jpg" />
+  <img src="https://raw.githubusercontent.com/josiahsrc/flutter_zustand/main/assets/bear_dart.jpg" />
 </p>
 
 > This package aims to bring the joy of [zustand](https://github.com/pmndrs/zustand?tab=readme-ov-file) to dart. A huge shoutout to @dai-shi, the original author of zustand.

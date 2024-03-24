@@ -1,6 +1,6 @@
 name: flutter_zustand
 description: "A package that brings Zustand-like state management in your Flutter app."
-version: 0.0.1
+version: 0.0.3
 repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
 homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
 
@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
-  zustand: ^0.0.1
+  zustand: ^0.0.3
 
 dev_dependencies:
   flutter_test:
