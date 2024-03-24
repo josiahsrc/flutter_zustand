@@ -1,7 +1,8 @@
 name: flutter_zustand
-description: "A new Flutter package project."
+description: "A package that brings Zustand-like state management in your Flutter app."
 version: 0.0.1
-homepage:
+repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
+homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
 
 environment:
   sdk: ">=3.3.1 <4.0.0"
