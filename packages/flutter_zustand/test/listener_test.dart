@@ -74,35 +74,21 @@ void main() {
 
       await tester.pumpWidget(const CounterApp());
       await tester.pumpAndSettle();
+      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
 
       await tester.tap(find.text('Increment1'));
       await tester.pumpAndSettle();
+      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
 
       expect(getState().numTimesEmit, 1);
       expect(getState().didEmit2, false);
 
       await tester.tap(find.text('Increment1'));
       await tester.pumpAndSettle();
+      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
 
       expect(getState().numTimesEmit, 2);
       expect(getState().didEmit2, true);
-    },
-  );
-
-  testWidgets(
-    'does not rebuild',
-    (tester) async {
-      await tester.pumpWidget(const CounterApp());
-      await tester.pumpAndSettle();
-      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
-
-      await tester.tap(find.text('Increment1'));
-      await tester.pumpAndSettle();
-      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
-
-      await tester.tap(find.text('Increment1'));
-      await tester.pumpAndSettle();
-      expect(find.text('Store1, rebuilds: 1'), findsOneWidget);
     },
   );
 }
