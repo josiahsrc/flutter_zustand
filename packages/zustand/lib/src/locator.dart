@@ -65,6 +65,7 @@ class StoreLocator {
   Future<void> dispose() async {
     await _controller.close();
     await deleteAll();
+    print("EVERYTHIGN DISPOSED");
     _instance = null;
   }
 
