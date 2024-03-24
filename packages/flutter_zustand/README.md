@@ -60,6 +60,7 @@ Widget build(BuildContext context) {
 
 - Doesn't require code generation
 - Simple
+- Less boilerplate
 
 ### Why zustand over provider?
 
