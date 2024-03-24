@@ -1,39 +1,147 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+<p align="center">
+  <img src="assets/bear.jpg" />
+</p>
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+> This package aims to bring the joy of [zustand](https://github.com/pmndrs/zustand?tab=readme-ov-file) to flutter. A huge shoutout to @dai-shi, the original author of zustand.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+A small, fast and scalable bearbones state-management solution using simplified flux principles. Has a comfy API. Isn't boilerplatey or opinionated.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Don't disregard it because it's cute. It has quite the claws. Lot's of time was spent making the API flexible while keeping it simple and easy to use.
 
-## Features
+:warning: This package is in its early stages and the API may change.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## First, wrap your app in a scope
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Zustand uses scope to notify widgets to rebuild.
 
 ```dart
-const like = 'sample';
+void main() {
+  runApp(const StoreScope(child: MyApp()));
+}
 ```
 
-## Additional information
+## Next, create a store
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Your store receives actions and emits state. State has to be updated immutably.
+
+```dart
+class BearStore extends Store<int> {
+  BearStore() : super(0);
+
+  void increasePopulation() => set(state + 1);
+  void removeAllBears() => set(0);
+}
+
+BearStore useBearStore() => create(() => BearStore());
+```
+
+## Then bind your widgets, and that's it!
+
+Use the store anywhere. Call it or select from it to rebuild when it changes.
+
+```dart
+Widget build(BuildContext context) {
+  final bears = useBearStore().select(context, (state) => state);
+  return ElevatedButton(
+    onPressed: useBearStore().increasePopulation,
+    child: Text('Bears: $bears'),
+  );
+}
+```
+
+### Why zustand over BloC?
+
+- Simple and un-opinionated
+- Less boilerplate
+- Access stores without context
+- Wrap your app once
+
+### Why zustand over riverpod?
+
+- Doesn't require code generation
+- Simple
+
+### Why zustand over provider?
+
+- Less boilerplate
+- Centralized, action-based state management
+- Context-free usage
+
+---
+
+# Recipes
+
+## Fetching everything
+
+You can, but bear in mind that it will cause the component to update on every state change!
+
+```dart
+final bears = useBearStore().select(context, (state) => state);
+```
+
+## Selecting multiple state slices
+
+It detects changes with equality (old == new). This is efficient for atomic state picks.
+
+```dart
+const nuts = useBearStore((state) => state.nuts)
+const honey = useBearStore((state) => state.honey)
+```
+
+## Async actions
+
+Just call set when you're ready, zustand doesn't care if your actions are async or not.
+
+```dart
+class BearStore extends Store<int> {
+  BearStore() : super(0);
+
+  Future<void> loadFishies() async {
+    final fishies = await fetch(pond);
+    set(fishies.length);
+  }
+}
+```
+
+## Read from state in actions
+
+Each store exposes a `state` property that you can access directly in your actions.
+
+```dart
+class BearStore extends Store<int> {
+  BearStore() : super(0);
+
+  void increasePopulation() {
+    set(state + 1);
+  }
+}
+```
+
+## Subscribe to store changes manually
+
+If you want to watch state changes from outside of the `build` method, you can listen to changes to state directly.
+
+```dart
+void initState() {
+  _sub = useBearStore().stream.listen((state) {
+    print("Bears: $state");
+  });
+}
+
+void dispose() {
+  // don't forget to cancel
+  _sub?.cancel(); 
+}
+```
+
+# Motivation
+
+If you'd like to learn more about why this library exists, check out the [motivation document](https://github.com/josiahsrc/flutter_zustand/blob/main/docs/motivation.md).
+
+# Contributing
+
+If you like the package and want to contribute, feel free to [open and issue or create a PR](https://github.com/josiahsrc/flutter_zustand/tree/main). I'm always open to suggestions and improvements.
+
+---
+
+keywords: flutter, state management, zustand, bear, cute, simple, fast, scalable, flux, store, action, state, provider, riverpod, bloc
