@@ -17,4 +17,9 @@ abstract class Store<V> {
     _state = value;
     _subject.add(value);
   }
+
+  @mustCallSuper
+  Future<void> dispose() async {
+    await _subject.close();
+  }
 }
