@@ -162,14 +162,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.27.7"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -239,6 +231,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "13.0.0"
+  zustand:
+    dependency: transitive
+    description:
+      path: "../../zustand"
+      relative: true
+    source: path
+    version: "1.0.0"
 sdks:
   dart: ">=3.3.1 <4.0.0"
   flutter: ">=1.17.0"
