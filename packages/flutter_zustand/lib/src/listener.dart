@@ -5,12 +5,17 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:zustand/zustand.dart';
 
+/// An extension on [Store] that exposes some helpful utilities for listening
+/// to store changes.
 extension StoreListenerX<V> on Store<V> {
+  /// Creates a listener widget that listens for changes to this [store].
+  ///
+  /// Intended to be used with a [StoreListener] widget.
   SingleChildWidget listen(
     StoreListenerCallback<V> callback, {
     StoreListenerCondition<V>? condition,
   }) {
-    return StoreReferenceListener<V>(
+    return _StoreReferenceListener<V>(
       store: this,
       callback: callback,
       condition: condition,
@@ -18,12 +23,14 @@ extension StoreListenerX<V> on Store<V> {
   }
 }
 
+/// A callback that is invoked when a store's [Store.state] changes.
 typedef StoreListenerCallback<V> = void Function(BuildContext context, V state);
 
+/// A predicate that determines whether a store's [Store.state] has changed.
 typedef StoreListenerCondition<V> = bool Function(V previous, V current);
 
-class StoreReferenceListener<V> extends SingleChildStatefulWidget {
-  const StoreReferenceListener({
+class _StoreReferenceListener<V> extends SingleChildStatefulWidget {
+  const _StoreReferenceListener({
     super.key,
     required this.store,
     required this.callback,
@@ -35,12 +42,12 @@ class StoreReferenceListener<V> extends SingleChildStatefulWidget {
   final StoreListenerCondition<V>? condition;
 
   @override
-  State<StoreReferenceListener<V>> createState() =>
+  State<_StoreReferenceListener<V>> createState() =>
       _StoreReferenceListenerState<V>();
 }
 
 class _StoreReferenceListenerState<V>
-    extends SingleChildState<StoreReferenceListener<V>> {
+    extends SingleChildState<_StoreReferenceListener<V>> {
   StreamSubscription? _sub;
   late V _prevState;
 
@@ -77,7 +84,28 @@ class _StoreReferenceListenerState<V>
   }
 }
 
+/// Registers listeners for multiple stores. The stores do not have to be of the
+/// same type.
+///
+/// Listeners can be created using the [StoreListenerX.listen] method.
+///
+/// ```
+/// Widget build(BuildContext context) {
+///   return StoreListener(
+///     [
+///       useBearStore().listen(
+///         (context, state) {
+///           print("There are $state bears");
+///         },
+///         condition: (prev, next) => prev != next && next == 5,
+///       ),
+///     ],
+///     child: Container(...),
+///   );
+/// }
+/// ```
 class StoreListener extends MultiProvider {
+  /// Creates a [StoreListener] widget.
   StoreListener(
     List<SingleChildWidget> listeners, {
     required Widget child,

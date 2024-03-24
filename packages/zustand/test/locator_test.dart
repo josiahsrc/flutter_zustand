@@ -77,6 +77,16 @@ void main() {
     expect(StoreLocator().isCreated(Store2), isFalse);
   });
 
+  test("throws when getting a store that doesn't exist", () {
+    expect(() => StoreLocator().get(Store1), throwsStateError);
+    expect(() => StoreLocator().get(Store2), throwsStateError);
+  });
+
+  test("throws when puting a store that already exists", () {
+    StoreLocator().put(Store2, Store2());
+    expect(() => StoreLocator().put(Store2, Store2()), throwsStateError);
+  });
+
   test('dispose disposes all stores', () async {
     StoreLocator().putFactory(Store1, createStore1);
     StoreLocator().putFactory(Store2, createStore2);

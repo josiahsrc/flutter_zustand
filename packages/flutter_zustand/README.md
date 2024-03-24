@@ -85,8 +85,10 @@ final bears = useBearStore().select(context, (state) => state);
 It detects changes with equality (old == new). This is efficient for atomic state picks.
 
 ```dart
-const nuts = useBearStore((state) => state.nuts)
-const honey = useBearStore((state) => state.honey)
+Widget build(BuildContext context) {
+  final nuts = useBearStore().select(context, (state) => state.nuts);
+  final honey = useBearStore().select(context, (state) => state.honey);
+}
 ```
 
 ## Reacting to state changes
