@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/bear.jpg" />
+  <img src="https://github.com/josiahsrc/flutter_zustand/blob/main/assets/bear_flutter.jpg" />
 </p>
 
 > This package aims to bring the joy of [zustand](https://github.com/pmndrs/zustand?tab=readme-ov-file) to flutter. A huge shoutout to @dai-shi, the original author of zustand.
@@ -9,6 +9,9 @@ A small, fast and scalable bearbones state-management solution using simplified 
 Don't disregard it because it's cute. It has quite the claws. Lot's of time was spent making the API flexible while keeping it simple and easy to use.
 
 :warning: This package is in its early stages and the API may change.
+
+- [Pub package](https://pub.dev/packages/flutter_zustand)
+- [Source code](https://github.com/josiahsrc/flutter_zustand/blob/main/packages/flutter_zustand)
 
 ## First, wrap your app in a scope
 
