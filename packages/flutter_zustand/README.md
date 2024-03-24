@@ -89,6 +89,26 @@ const nuts = useBearStore((state) => state.nuts)
 const honey = useBearStore((state) => state.honey)
 ```
 
+## Reacting to state changes
+
+You can add listeners to any store using the `StoreListener` widget.
+
+```dart
+Widget build(BuildContext context) {
+  return StoreListener(
+    [
+      useBearStore().listen(
+        (context, state) {
+          print("There are $state bears");
+        },
+        condition: (prev, next) => prev != next && next == 5,
+      ),
+    ],
+    child: Container(...),
+  );
+}
+```
+
 ## Async actions
 
 Just call set when you're ready, zustand doesn't care if your actions are async or not.
