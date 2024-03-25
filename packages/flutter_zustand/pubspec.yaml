@@ -1,6 +1,6 @@
 name: flutter_zustand
-description: "The bear necessities for state management in Flutter"
-version: 0.0.4
+description: "Brings zustand's bear necessities for state management to Flutter"
+version: 0.0.5
 repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
 homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
 
@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
-  zustand: ^0.0.4
+  zustand: ^0.0.5
 
 dev_dependencies:
   flutter_test:

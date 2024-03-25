@@ -1,6 +1,6 @@
 name: zustand
-description: "The bear necessities for state management in Dart"
-version: 0.0.4
+description: "Brings zustand's bear necessities for state management to Dart"
+version: 0.0.5
 repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/zustand
 homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/zustand
 
