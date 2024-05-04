@@ -162,7 +162,7 @@ void dispose() {
 
 ## Clean up resources
 
-You can dispose of stores automatically using the `StoreDisposer` widget.
+You can automatically dispose of stores using the `StoreDisposer` widget. The stores are disposed of when the `StoreDisposer` widget goes out of scope.
 
 ```dart
 Widget build(BuildContext context) {
