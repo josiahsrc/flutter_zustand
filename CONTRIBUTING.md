@@ -18,8 +18,8 @@ Before creating a pull request please:
 1. Install all dependencies (`flutter packages get` or `pub get`).
 1. Squash your commits and ensure you have a meaningful commit message.
 1. If you've changed the public API, make sure to update/add documentation.
-1. Format your code (`dartfmt -w .`).
-1. Analyze your code (`dartanalyzer --fatal-infos --fatal-warnings .`).
+1. Format your code (`dart format .`).
+1. Analyze your code (`dart analyze --fatal-infos --fatal-warnings .`).
 1. Create the Pull Request.
 1. Verify that all status checks are passing.
 

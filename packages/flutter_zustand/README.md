@@ -160,6 +160,21 @@ void dispose() {
 }
 ```
 
+## Clean up resources
+
+You can dispose of stores automatically using the `StoreDisposer` widget.
+
+```dart
+Widget build(BuildContext context) {
+  return StoreDisposer(
+    [
+      useBearStore(),
+    ],
+    child: Container(...),
+  );
+}
+```
+
 # Motivation
 
 If you'd like to learn more about why this library exists, check out the [motivation document](https://github.com/josiahsrc/flutter_zustand/blob/main/docs/motivation.md).

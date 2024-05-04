@@ -135,6 +135,22 @@ void main() {
     expect(store2.isDisposed, isFalse);
   });
 
+  test("delete works when using runtime types", () async {
+    StoreLocator().putFactory(Store1, createStore1);
+    StoreLocator().putFactory(Store2, createStore2);
+
+    final store1 = StoreLocator().get<Store1, int>(Store1);
+    final store2 = StoreLocator().get<Store2, int>(Store2);
+
+    expect(store1.isDisposed, isFalse);
+    expect(store2.isDisposed, isFalse);
+
+    await StoreLocator().delete(store1.runtimeType);
+
+    expect(store1.isDisposed, isTrue);
+    expect(store2.isDisposed, isFalse);
+  });
+
   test("delete can be called without an instance", () async {
     expect(() => StoreLocator().delete(Store1), returnsNormally);
     expect(() => StoreLocator().delete(Store2), returnsNormally);
