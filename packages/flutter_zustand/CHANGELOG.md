@@ -1,7 +1,3 @@
-## 0.0.6
-
-- Add `StoreDisposer` to clean up unwanted resources after being removed from the widget tree
-
 ## 0.0.5
 
 - Fix description linting
