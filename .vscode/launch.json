@@ -6,6 +6,12 @@
       "cwd": "packages/flutter_zustand/example",
       "request": "launch",
       "type": "dart"
+    },
+    {
+      "name": "flutter_atomic_example",
+      "cwd": "packages/flutter_atomic/example",
+      "request": "launch",
+      "type": "dart"
     }
   ]
 }

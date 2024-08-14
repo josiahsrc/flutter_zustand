@@ -1,0 +1,32 @@
+name: flutter_atomic
+description: "Brings a simple signal state paradigm to Flutter. Inspired by Jotai."
+version: 0.0.6
+repository: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
+homepage: https://github.com/josiahsrc/flutter_zustand/tree/main/packages/flutter_zustand
+publish_to: "none"
+
+environment:
+  sdk: ">=3.3.1 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  rxdart: ^0.28.0
+  flutter_zustand:
+    path: ../flutter_zustand
+  zustand:
+    path: ../zustand
+
+# override zustand dependency to use the local package
+dependency_overrides:
+  zustand:
+    path: ../zustand
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:

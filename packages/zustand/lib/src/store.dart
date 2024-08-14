@@ -30,8 +30,6 @@ abstract class Store<V> {
   bool get isDisposed => _disposed;
 
   /// Sets the [state] of the store and emits a change event.
-  @visibleForTesting
-  @protected
   void set(V value) {
     if (isDisposed) {
       throw StateError('Cannot set state on a disposed store');
