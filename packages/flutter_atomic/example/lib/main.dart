@@ -1,4 +1,5 @@
 import 'package:example/counter.dart';
+import 'package:example/derived.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atomic/flutter_atomic.dart';
 
@@ -56,6 +57,10 @@ class MyHomePage extends StatelessWidget {
           DemoTile(
             title: const Text("Counter"),
             builder: (context) => const CounterPage(),
+          ),
+          DemoTile(
+            title: const Text("Derived Atom"),
+            builder: (context) => const DerivedPage(),
           ),
         ],
       ),

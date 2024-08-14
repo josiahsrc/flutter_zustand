@@ -48,8 +48,11 @@ class DerivedAtom<T> extends Atom<T> {
     required List<Atom> dependencies,
   }) : super(id) {
     CombineLatestStream.list(
-      dependencies.map((atom) => atom.stream).toList(),
-    ).listen((_) {
+      dependencies.map((atom) async* {
+        yield atom.value;
+        yield* atom.stream;
+      }).toList(),
+    ).skip(1).listen((_) {
       value = builder();
     });
   }
@@ -68,7 +71,7 @@ DerivedAtom<T> derivedAtom<T>(
 
 extension AtomSelectorX<T> on Atom<T> {
   T watch(BuildContext context) {
-    return context.select<StoreLocator, T>((_) => value);
+    return select(context, (value) => value);
   }
 
   S select<S>(BuildContext context, S Function(T value) selector) {
