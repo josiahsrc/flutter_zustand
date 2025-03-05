@@ -66,7 +66,8 @@ class _StoreReferenceListenerState<V>
 
   void _subscribe() {
     _sub = widget.store.stream.listen((state) {
-      if (widget.condition?.call(_prevState, state) ?? true) {
+      final matched = widget.condition?.call(_prevState, state) ?? true;
+      if (matched && mounted) {
         widget.callback(context, state);
       }
       _prevState = state;
