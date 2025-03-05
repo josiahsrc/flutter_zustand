@@ -58,7 +58,7 @@ class DerivedAtom<T> extends Atom<T> {
   }
 }
 
-DerivedAtom<T> derivedAtom<T>(
+DerivedAtom<T> atomCombiner<T>(
   DerivedBuilder<T> builder,
   List<Atom> dependencies,
 ) {
@@ -77,18 +77,4 @@ extension AtomSelectorX<T> on Atom<T> {
   S select<S>(BuildContext context, S Function(T value) selector) {
     return context.select<StoreLocator, S>((_) => selector(value));
   }
-}
-
-final count = atom(0);
-final count2 = atom(0);
-
-final added = derivedAtom(
-  () {
-    return count.value + count2.value;
-  },
-  [count, count2],
-);
-
-void something() {
-  count.value += 1;
 }

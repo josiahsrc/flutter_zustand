@@ -10,6 +10,11 @@ final equalsAtom = atomCombiner(
   [numAtom1, numAtom2],
 );
 
+// final loadFishies = asyncAtom(
+//   () async {},
+//   [numAtom1],
+// );
+
 class DerivedPage extends StatelessWidget {
   const DerivedPage({super.key});
 
