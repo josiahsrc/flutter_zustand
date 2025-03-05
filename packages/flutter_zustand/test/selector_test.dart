@@ -32,15 +32,20 @@ class Store1Counter extends StatefulWidget {
 
 class _Store1CounterState extends State<Store1Counter> {
   int rebuilds = 0;
+  int selects = 0;
 
   @override
   Widget build(BuildContext context) {
     rebuilds++;
-    final count = useStore1().select(context, (state) => state);
+
+    final count = useStore1().select(context, (state) {
+      selects++;
+      return state;
+    });
 
     return Column(
       children: [
-        Text('Store1: $count, rebuilds: $rebuilds'),
+        Text('Store1: $count, rebuilds: $rebuilds, selects: $selects'),
         ElevatedButton(
           onPressed: () {
             useStore1().increment();
@@ -61,12 +66,18 @@ class NotObserved extends StatefulWidget {
 
 class _NotObservedState extends State<NotObserved> {
   int rebuilds = 0;
+  int selects = 0;
 
   @override
   Widget build(BuildContext context) {
     rebuilds++;
-    final count = useStore1().select(context, (state) => 0);
-    return Text("Not observed: $count, rebuilds: $rebuilds");
+
+    final count = useStore1().select(context, (state) {
+      selects++;
+      return state;
+    });
+
+    return Text("Not observed: $count, rebuilds: $rebuilds, selects: $selects");
   }
 }
 
@@ -79,15 +90,20 @@ class Store2Counter extends StatefulWidget {
 
 class _Store2CounterState extends State<Store2Counter> {
   int rebuilds = 0;
+  int selects = 0;
 
   @override
   Widget build(BuildContext context) {
     rebuilds++;
-    final count = useStore2().select(context, (state) => state);
+
+    final count = useStore2().select(context, (state) {
+      selects++;
+      return state;
+    });
 
     return Column(
       children: [
-        Text('Store2: $count, rebuilds: $rebuilds'),
+        Text('Store2: $count, rebuilds: $rebuilds, selects: $selects'),
         ElevatedButton(
           onPressed: () {
             useStore2().increment();
@@ -106,23 +122,50 @@ void main() {
       await tester.pumpWidget(const CounterApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Store1: 0, rebuilds: 1'), findsOneWidget);
-      expect(find.text('Store2: 0, rebuilds: 1'), findsOneWidget);
-      expect(find.text('Not observed: 0, rebuilds: 1'), findsOneWidget);
+      expect(
+        find.text('Store1: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Store2: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Not observed: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Increment1'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Store1: 1, rebuilds: 2'), findsOneWidget);
-      expect(find.text('Store2: 0, rebuilds: 1'), findsOneWidget);
-      expect(find.text('Not observed: 0, rebuilds: 1'), findsOneWidget);
+      expect(
+        find.text('Store1: 1, rebuilds: 2, selects: 2'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Store2: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Not observed: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Increment2'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Store1: 1, rebuilds: 2'), findsOneWidget);
-      expect(find.text('Store2: 1, rebuilds: 2'), findsOneWidget);
-      expect(find.text('Not observed: 0, rebuilds: 1'), findsOneWidget);
+      expect(
+        find.text('Store1: 1, rebuilds: 2, selects: 2'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Store2: 1, rebuilds: 2, selects: 2'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Not observed: 0, rebuilds: 1, selects: 1'),
+        findsOneWidget,
+      );
     },
   );
 }
