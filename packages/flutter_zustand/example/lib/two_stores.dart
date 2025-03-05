@@ -12,8 +12,8 @@ class CounterStore1 extends BaseCounterStore {}
 
 class CounterStore2 extends BaseCounterStore {}
 
-BaseCounterStore useCounterStore1() => create(() => CounterStore1());
-BaseCounterStore useCounterStore2() => create(() => CounterStore2());
+CounterStore1 useCounterStore1() => create(() => CounterStore1());
+CounterStore2 useCounterStore2() => create(() => CounterStore2());
 
 class TwoStoresPage extends StatefulWidget {
   const TwoStoresPage({super.key});
