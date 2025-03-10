@@ -15,29 +15,51 @@ class CounterStore2 extends BaseCounterStore {}
 CounterStore1 useCounterStore1() => create(() => CounterStore1());
 CounterStore2 useCounterStore2() => create(() => CounterStore2());
 
-class TwoStoresPage extends StatefulWidget {
-  const TwoStoresPage({super.key});
+class Select1 extends StatefulWidget {
+  const Select1({super.key});
 
   @override
-  State<TwoStoresPage> createState() => _TwoStoresPageState();
+  State<Select1> createState() => _Select1State();
 }
 
-class _TwoStoresPageState extends State<TwoStoresPage> {
-  int select1 = 0;
-  int select2 = 0;
+class _Select1State extends State<Select1> {
+  int select = 0;
 
   @override
   Widget build(BuildContext context) {
-    final count1 = useCounterStore1().select(context, (state) {
-      select1 += 1;
+    final count = useCounterStore1().select(context, (state) {
+      select += 1;
       return state;
     });
+    return Text('Count 1: $count, Select 1: $select');
+  }
+}
 
-    final count2 = useCounterStore2().select(context, (state) {
-      select2 += 1;
+class Select2 extends StatefulWidget {
+  const Select2({super.key});
+
+  @override
+  State<Select2> createState() => _Select2State();
+}
+
+class _Select2State extends State<Select2> {
+  int select = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = useCounterStore2().select(context, (state) {
+      select += 1;
       return state;
     });
+    return Text('Count 2: $count, Select 2: $select');
+  }
+}
 
+class TwoStoresPage extends StatelessWidget {
+  const TwoStoresPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     final page = Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -47,8 +69,8 @@ class _TwoStoresPageState extends State<TwoStoresPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Count 1: $count1'),
-            Text('Count 2: $count2'),
+            const Select1(),
+            const Select2(),
             const SizedBox(height: 20),
             IconButton(
               icon: const Icon(Icons.refresh),
@@ -57,8 +79,6 @@ class _TwoStoresPageState extends State<TwoStoresPage> {
                 useCounterStore2().reset();
               },
             ),
-            Text('Select 1: $select1'),
-            Text('Select 2: $select2'),
           ],
         ),
       ),

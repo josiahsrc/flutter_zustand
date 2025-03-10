@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:zustand/zustand.dart';
+
+import 'internal.dart';
 
 /// Extends the [Store] class with selector methods that allow you to watch
 /// atomic slices of the [Store.state].
@@ -18,8 +19,7 @@ extension StoreSelectorX<V> on Store<V> {
     BuildContext context,
     T Function(V state) selector,
   ) {
-    return context.select<StoreLocator, T>(
-      (_) => selector(state),
-    );
+    InheritedStoreScope.of(context, encodeDependency(runtimeType));
+    return selector(state);
   }
 }
